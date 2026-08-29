@@ -54,13 +54,21 @@ This file is the project's committed home for project-intrinsic agent knowledge:
   version's CHANGELOG section (fails the release if missing) and
   `.github/workflows/release.yml` builds/pushes
   `ghcr.io/laaaaksh/perfnest:vX.Y.Z` + `:latest`.
-
-## Maintaining this file
-
-Keep this file for knowledge useful to almost every future agent session in this project.
-Do not repeat what the codebase already shows; point to the authoritative file or command instead.
-Prefer rewriting or pruning existing entries over appending new ones.
-When updating this file, preserve this bar for all agents and keep entries concise.
+- Both compose services publish their port so host tooling can reach them:
+  `HOST_PORT` (app, default 3000) and `DB_HOST_PORT` (db, default 5432) in
+  `.env` remap either if already taken - see CONTRIBUTING.md for using
+  `DB_HOST_PORT` to run the integration suite locally.
+- If `.github/workflows/ci.yml` runs show every job failing in ~2s with no
+  steps recorded, check the job's check-run annotations
+  (`gh api repos/<owner>/<repo>/check-runs/<id>/annotations`) before assuming
+  a code regression - as of 2026-08-30 every run on this repo failed with
+  "recent account payments have failed or your spending limit needs to be
+  increased," i.e. GitHub Actions billing on the private repo, unrelated to
+  the code. GitHub Actions minutes are free for public repositories and
+  don't count against the spending limit, so this may resolve on its own
+  once the repo goes public - verify locally with `npm run lint`, `npm run
+  typecheck`, `npm test` (with `DATABASE_URL` set), and `npm run build`
+  instead of waiting on a green Actions run.
 
 ## Maintaining this file
 

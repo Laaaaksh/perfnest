@@ -50,6 +50,8 @@ scenario this tool exists to catch.
 
 - Docker and Docker Compose (the supported way to run this)
 - ~1GB of free memory for headless Chromium — Lighthouse runs a real browser, not a simulation
+- Ports 3000 (app) and 5432 (Postgres, only if you run the `db:migrate:dev` / integration-test
+  workflow from [CONTRIBUTING.md](CONTRIBUTING.md)) free on the host — see below to remap either
 
 Running from source instead of Docker also works, but you're then responsible for Postgres
 16+, Node.js 20+, and a Chromium binary on `$PATH` (see `CHROME_PATH` in
@@ -64,9 +66,15 @@ cp .env.example .env   # set ADMIN_PASSWORD and AUTH_SECRET, at minimum
 docker compose up -d
 ```
 
+The first build installs headless Chromium inside the app image for Lighthouse to drive —
+that's most of the ~15 minutes a cold, uncached first build takes; later builds are fast.
+
 Open `http://localhost:3000` and sign in with the `ADMIN_PASSWORD` you set. Perfnest is
 single-admin software — there are no user accounts, just one shared password for whoever
 operates this instance.
+
+If port 3000 (or 5432 for Postgres) is already taken on your host, set `HOST_PORT` (or
+`DB_HOST_PORT`) in `.env` to remap it, e.g. `HOST_PORT=3001 docker compose up -d`.
 
 ## Usage
 

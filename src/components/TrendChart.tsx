@@ -36,7 +36,7 @@ export function TrendChart({
         <span className="text-xs text-[var(--text-dim)]">{unit}</span>
       </div>
       <ResponsiveContainer width="100%" height={180}>
-        <LineChart data={data} margin={{ top: 4, right: 8, bottom: 0, left: -16 }}>
+        <LineChart data={data} margin={{ top: 4, right: 8, bottom: 0, left: 0 }}>
           <CartesianGrid stroke="#262b38" strokeDasharray="3 3" vertical={false} />
           <XAxis dataKey="date" stroke="#8b93a7" fontSize={11} tickLine={false} axisLine={false} minTickGap={24} />
           <YAxis stroke="#8b93a7" fontSize={11} tickLine={false} axisLine={false} width={40} />

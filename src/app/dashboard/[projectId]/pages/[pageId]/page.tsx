@@ -184,8 +184,8 @@ export default async function PageDetail({
                       </span>
                     </td>
                     <td className="px-4 py-2">{run.performanceScore ?? "—"}</td>
-                    <td className="px-4 py-2">{run.lcp ? `${Math.round(run.lcp)}ms` : "—"}</td>
-                    <td className="px-4 py-2">{run.tbt ? `${Math.round(run.tbt)}ms` : "—"}</td>
+                    <td className="px-4 py-2">{run.lcp != null ? `${Math.round(run.lcp)}ms` : "—"}</td>
+                    <td className="px-4 py-2">{run.tbt != null ? `${Math.round(run.tbt)}ms` : "—"}</td>
                     <td className="px-4 py-2">{run.cls?.toFixed(3) ?? "—"}</td>
                     <td className="px-4 py-2 text-[var(--text-dim)]">{run.deployId ?? "—"}</td>
                   </tr>

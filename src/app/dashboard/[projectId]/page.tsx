@@ -217,11 +217,9 @@ export default async function ProjectPage({ params }: { params: Promise<{ projec
           <h2 className="mb-3 text-sm font-medium text-[var(--text-dim)]">CI / webhook trigger</h2>
           <div className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-4">
             <p className="mb-3 text-sm text-[var(--text-dim)]">
-              Trigger an on-demand run from a deploy pipeline with this project&apos;s API token. See{" "}
-              <Link href="/dashboard" className="text-[var(--accent)] underline">
-                the CI guide in the README
-              </Link>{" "}
-              for a ready-to-paste GitHub Actions step.
+              Trigger an on-demand run from a deploy pipeline with this project&apos;s API token
+              (see the README&apos;s CI integration section for a ready-to-paste GitHub Actions
+              step).
             </p>
             <pre className="mb-3 overflow-x-auto rounded-md bg-[var(--surface-2)] p-3 text-xs">
               {`curl -sf -X POST ${baseUrl}/api/pages/<pageId>/runs \\
