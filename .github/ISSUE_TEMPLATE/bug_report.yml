@@ -1,0 +1,48 @@
+name: Bug report
+description: Report a problem with Perfnest
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Steps to reproduce, and what you expected vs what actually happened.
+      placeholder: |
+        1. Add a page pointed at https://example.com
+        2. Click "Run now"
+        3. See error
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Perfnest version / image tag
+      description: The Docker image tag or commit SHA you're running.
+      placeholder: "ghcr.io/laaaaksh/perfnest:v0.1.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: deploy-method
+    attributes:
+      label: How are you running Perfnest?
+      options:
+        - docker compose (from this repo)
+        - Docker (custom setup)
+        - npm run dev / npm start (source checkout)
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS/host, Postgres version, and anything relevant about the page under test (auth-gated, behind a CDN, etc).
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      description: Output from `docker compose logs app`, if relevant.
+      render: shell
+    validations:
+      required: false

@@ -1,0 +1,144 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Device {
+  mobile
+  desktop
+}
+
+enum TriggerSource {
+  schedule
+  webhook
+  manual
+}
+
+enum RunStatus {
+  pending
+  running
+  success
+  failed
+}
+
+// INP (Interaction to Next Paint) is a field metric: it requires real user
+// interactions and cannot be produced by a synthetic Lighthouse lab run.
+// Total Blocking Time is Google's own documented lab-mode proxy for
+// responsiveness, so it stands in for INP here instead of shipping a metric
+// that would always be null. See README "Metrics" for the full explanation.
+enum BudgetMetric {
+  performance_score
+  lcp
+  tbt
+  cls
+  fcp
+}
+
+enum AlertChannelType {
+  slack
+  webhook
+  email
+}
+
+model Project {
+  id            String   @id @default(cuid())
+  name          String
+  apiToken      String   @unique
+  publicEnabled Boolean  @default(false)
+  publicSlug    String?  @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  pages         Page[]
+  alertChannels AlertChannel[]
+}
+
+model Page {
+  id              String   @id @default(cuid())
+  projectId       String
+  project         Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  label           String
+  url             String
+  device          Device   @default(mobile)
+  intervalMinutes Int      @default(360)
+  lastRunAt       DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  budgets Budget[]
+  runs    Run[]
+
+  @@index([projectId])
+}
+
+model Budget {
+  id        String       @id @default(cuid())
+  pageId    String
+  page      Page         @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  metric    BudgetMetric
+  threshold Float
+  enabled   Boolean      @default(true)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  alerts Alert[]
+
+  @@unique([pageId, metric])
+}
+
+model Run {
+  id                String        @id @default(cuid())
+  pageId            String
+  page              Page          @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  triggeredBy       TriggerSource @default(schedule)
+  deployId          String?
+  status            RunStatus     @default(pending)
+  errorMessage      String?
+  performanceScore  Float?
+  lcp               Float?
+  cls               Float?
+  tbt               Float?
+  fcp               Float?
+  lighthouseVersion String?
+  startedAt         DateTime      @default(now())
+  finishedAt        DateTime?
+
+  alerts Alert[]
+
+  @@index([pageId, startedAt])
+}
+
+model AlertChannel {
+  id        String           @id @default(cuid())
+  projectId String
+  project   Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  type      AlertChannelType
+  target    String
+  enabled   Boolean          @default(true)
+  createdAt DateTime         @default(now())
+
+  alerts Alert[]
+
+  @@index([projectId])
+}
+
+model Alert {
+  id             String        @id @default(cuid())
+  runId          String
+  run            Run           @relation(fields: [runId], references: [id], onDelete: Cascade)
+  budgetId       String
+  budget         Budget        @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  channelId      String?
+  channel        AlertChannel? @relation(fields: [channelId], references: [id], onDelete: SetNull)
+  metric         BudgetMetric
+  thresholdValue Float
+  actualValue    Float
+  notifiedAt     DateTime?
+  createdAt      DateTime      @default(now())
+
+  @@index([runId])
+}
