@@ -67,6 +67,10 @@ DATABASE_URL=postgresql://perfnest:perfnest@localhost:5432/perfnest npm run db:m
 DATABASE_URL=postgresql://perfnest:perfnest@localhost:5432/perfnest npm test
 ```
 
+If port 5432 is already in use on your machine, set `DB_HOST_PORT` (in
+`.env` or inline) to publish the `db` service on a different host port, and
+point `DATABASE_URL` at that port instead.
+
 These tests inject a fake Lighthouse runner - no headless Chrome or network
 access is needed to run them. CI always runs the full suite, including
 integration tests, against a Postgres service container.
