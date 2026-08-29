@@ -1,5 +1,5 @@
 # --- builder ---------------------------------------------------------------
-FROM node:20-bookworm-slim AS builder
+FROM node:26-bookworm-slim AS builder
 WORKDIR /app
 
 COPY package.json package-lock.json* ./
@@ -12,7 +12,7 @@ COPY . .
 RUN npm run build
 
 # --- runtime -----------------------------------------------------------------
-FROM node:20-bookworm-slim AS runtime
+FROM node:26-bookworm-slim AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
 ENV CHROME_PATH=/usr/bin/chromium
