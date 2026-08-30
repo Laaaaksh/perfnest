@@ -19,4 +19,4 @@ Format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - An optional public, read-only dashboard per project.
 - Single-admin-password auth - no user accounts or SSO in v1.
 
-[Unreleased]: https://github.com/Laaaaksh/perfnest/compare/HEAD
+[Unreleased]: https://github.com/Laaaaksh/perfnest/commits/master

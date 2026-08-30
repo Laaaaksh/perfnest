@@ -49,7 +49,17 @@ This file is the project's committed home for project-intrinsic agent knowledge:
 - `npm run seed` (`scripts/seed.ts`) populates a "Demo" project with 40
   synthetic runs including a deliberate regression + recovery arc and a
   budget breach, for local exploration and the README's demo screenshot.
-  Re-running it deletes and recreates the "Demo" project (idempotent).
+  Re-running it deletes and recreates the "Demo" project (idempotent). If
+  the scheduler is running against the seeded page when you reseed, it can
+  append one extra real run once the page's interval elapses - check for a
+  stray row with a NULL `deployId` after `lastRunAt` before recapturing the
+  screenshot, or bump `intervalMinutes` first.
+- To recapture `docs/assets/demo-trend.png`: `docker compose up -d --build`,
+  `docker compose exec app npm run seed`, then log in and screenshot
+  `/dashboard/<projectId>/pages/<pageId>` with `puppeteer-core` (already a
+  transitive dep via `lighthouse`) driving a `chrome-launcher` instance -
+  there's no browser automation tool available in this environment, and
+  Chrome's plain `--screenshot` CLI flag can't get past the login form.
 - Releases: push a `vX.Y.Z` tag. `scripts/release_notes.sh` extracts that
   version's CHANGELOG section (fails the release if missing) and
   `.github/workflows/release.yml` builds/pushes
