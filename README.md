@@ -39,12 +39,12 @@ regresses — self-hosted, no per-seat fee, no real-user tracking script on your
 
 ## Demo
 
-![Perfnest trend dashboard showing a performance score regression and an LCP budget breach](docs/assets/demo-trend.png)
+![Perfnest demo: registering a page, running real Lighthouse checks, and a budget breach showing on the trend chart](docs/assets/demo.gif)
 
-The chart above is real output from a running Perfnest instance seeded with `npm run seed`:
-a steady ~92 performance score, a sharp drop to 61 after a deploy (`a1b2c3d`), and the LCP
-chart crossing its 2,500ms budget line at the same run — the exact regression-plus-alert
-scenario this tool exists to catch.
+A real Perfnest instance registering a page, running genuine Lighthouse checks against it,
+setting an LCP budget, and catching a real breach the moment the monitored page gets heavier
+— with the regression visible on the trend chart. See [`docs/assets/demo.mp4`](docs/assets/demo.mp4)
+for the full-quality video.
 
 ## Requirements
 

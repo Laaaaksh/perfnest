@@ -12,3 +12,4 @@ coverage/
 *.tsbuildinfo
 next-env.d.ts
 /data/
+scripts/record-demo/output/
