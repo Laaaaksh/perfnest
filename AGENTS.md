@@ -48,18 +48,26 @@ This file is the project's committed home for project-intrinsic agent knowledge:
   local `DATABASE_URL` workflow.
 - `npm run seed` (`scripts/seed.ts`) populates a "Demo" project with 40
   synthetic runs including a deliberate regression + recovery arc and a
-  budget breach, for local exploration and the README's demo screenshot.
-  Re-running it deletes and recreates the "Demo" project (idempotent). If
-  the scheduler is running against the seeded page when you reseed, it can
-  append one extra real run once the page's interval elapses - check for a
-  stray row with a NULL `deployId` after `lastRunAt` before recapturing the
-  screenshot, or bump `intervalMinutes` first.
-- To recapture `docs/assets/demo-trend.png`: `docker compose up -d --build`,
-  `docker compose exec app npm run seed`, then log in and screenshot
-  `/dashboard/<projectId>/pages/<pageId>` with `puppeteer-core` (already a
-  transitive dep via `lighthouse`) driving a `chrome-launcher` instance -
-  there's no browser automation tool available in this environment, and
-  Chrome's plain `--screenshot` CLI flag can't get past the login form.
+  budget breach, for local exploration. Re-running it deletes and recreates
+  the "Demo" project (idempotent).
+- A page with `lastRunAt: null` (just created, never run) is immediately
+  "due" per `src/lib/scheduler.ts`'s `isPageDue`, and the in-process
+  scheduler ticks every minute (`node-cron`, `* * * * *`). If that tick lands
+  in the few seconds between creating a page and its first manual/API run,
+  both try to launch Lighthouse at once and one fails with `the "start
+  lh:storage:clearDataForOrigin" performance mark has not been set`. This
+  bites both reseeding (bump `intervalMinutes` or check for a stray row
+  first) and any scripted UI flow that creates-then-immediately-runs a page
+  (see below) - start such a flow just after a fresh minute boundary to give
+  it a safety margin before the next tick.
+- `docs/assets/demo.mp4` / `demo.gif` are produced by `make demo`, which
+  boots a fresh stack, drives the real UI with the Playwright recorder in
+  `scripts/record-demo/` (its own standalone `package.json` - not a build
+  dependency), and converts the capture with `ffmpeg`. See
+  `scripts/record-demo/README.md` for what the walkthrough does. Every
+  metric in that recording comes from a genuine `runLighthouse()` call
+  (real `example.com` and Wikipedia runs) - there is no synthetic/seeded
+  data in the demo assets.
 - Releases: push a `vX.Y.Z` tag. `scripts/release_notes.sh` extracts that
   version's CHANGELOG section (fails the release if missing) and
   `.github/workflows/release.yml` builds/pushes

@@ -1,0 +1,13 @@
+{
+  "name": "perfnest-record-demo",
+  "private": true,
+  "type": "module",
+  "description": "Standalone Playwright recorder that drives the real Perfnest UI end-to-end and captures a video. Not a dependency of the product build - run it from this directory only.",
+  "scripts": {
+    "record": "node record.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0",
+    "dotenv": "^16.4.5"
+  }
+}
