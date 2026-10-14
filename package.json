@@ -24,7 +24,7 @@
   "dependencies": {
     "@prisma/client": "^6.2.1",
     "chrome-launcher": "^1.1.2",
-    "jose": "^5.9.6",
+    "jose": "^6.2.10",
     "lighthouse": "^12.3.0",
     "next": "^15.1.4",
     "node-cron": "^3.0.3",
